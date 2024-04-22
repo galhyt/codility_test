@@ -40,7 +40,7 @@ class The2048Bonacci():
 
 
 def is_primary(n: int):
-    for p in range(2, int(n / 2)):
+    for p in range(2, int(n / 2)+1):
         if n % p == 0:
             return False
     return True
@@ -48,7 +48,7 @@ def is_primary(n: int):
 
 def primary_construct(n: int):
     p = 2
-    for p in range(2, int(n / 2)):
+    for p in range(2, int(n / 2)+1):
         if n % p == 0:
             construction = [p]
             if not is_primary(p):

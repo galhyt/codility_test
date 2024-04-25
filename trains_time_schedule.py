@@ -16,6 +16,13 @@ class TrainSchedule:
     departure: float
     arrival: float
 
+    def __repr__(self):
+        dep_h = int(self.departure)
+        dep_m = int((self.departure - dep_h) * 60)
+        arr_h = int(self.arrival)
+        arr_m = int((self.arrival - arr_h) * 60)
+        return f"{self.src} -> {self.dest}   {dep_h:02d}:{dep_m:02d}     {arr_h:02d}:{arr_m:02d}"
+
 
 @dataclass
 class Train:
@@ -63,5 +70,11 @@ if __name__ == '__main__':
 
     schedules = [TrainSchedule(*(st + sc))
                  for st, scheds in times.items() for sc in scheds]
-    print(schedules)
+    a_schedule = [sc for sc in schedules if sc.src == 'A']
+    b_schedule = [sc for sc in schedules if sc.src == 'B']
+    for i, a_sc in enumerate(a_schedule):
+        print(a_sc, end="")
+        if i < len(b_schedule):
+            print(f"    {b_schedule[i]}")
+
     print(min_pool(schedules))

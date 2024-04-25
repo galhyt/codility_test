@@ -23,13 +23,13 @@ def exec_queries(queries: List[str]):
 def get_next_page_query(res):
     if 'Link' in res.headers:
         link = res.headers['Link']
-        queries = re.split(r'; rel="\w+"', link)
+        ma = re.search(r'(?<=<).+(?=>; rel="next")', link)
+        if not ma:
+            return None
 
-        queries.remove('')
-        query = queries[0] if len(queries) <= 2 else queries[1]
-        query = query[query.index('<')+1:-1]
-
+        query = ma.group()
         return query
+
     return None
 
 
@@ -43,7 +43,8 @@ def exec_query(query: str):
     if total_count == 0:
         return 0, []
     rate_limit = int(res.headers['X-RateLimit-Remaining'])
-
+    if rate_limit == 0:
+        raise Exception(f"Api rate limit equals {rate_limit}. Handled query: {query}")
     items = []
     page_size = max(math.ceil(total_count / rate_limit), 1000)
     query = f"{query}&per_page={page_size}"

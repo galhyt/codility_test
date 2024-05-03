@@ -24,7 +24,6 @@ def inplace_merge_sort(arr, s, e):
         devider *= 2
 
 
-
 def merge_sort(arr):
     n = len(arr)
     inplace_merge_sort(arr, 0, n-1)

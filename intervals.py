@@ -16,6 +16,7 @@ fn1     12
 fn3     14
 ...
 """
+import asyncio
 import time
 from typing import List, Callable
 
@@ -56,6 +57,12 @@ def set_intervals(intervals: List[int], functions: List[Callable]):
         prev = inter
 
 
+async def set_intervals2(interval: int, fn: Callable):
+    while True:
+        await asyncio.sleep(interval)
+        fn()
+
+
 if __name__ == '__main__':
     start = time.time()
     def fn1():
@@ -67,4 +74,9 @@ if __name__ == '__main__':
 
     intervals = [3, 5, 7]
     functions = [fn1, fn2, fn3]
-    set_intervals(intervals, functions)
+    # set_intervals(intervals, functions)
+    async def main():
+        tasks = [set_intervals2(intervals[i], functions[i]) for i in range(len(intervals))]
+        await asyncio.gather(*tasks)
+
+    asyncio.run(main())

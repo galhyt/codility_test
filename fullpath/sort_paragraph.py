@@ -9,11 +9,16 @@ def sort_paragraph(paragraph: str):
     # extract words only from the paragraph
     arr = re.split(r'[^\w]+', paragraph)
 
+    word_dict = {w: 0 for w in arr}
+    def _key(word: str):
+        word_dict[word] += 1
+        return reduce(lambda w, l: w + chr(a_ord + letters_order[l.upper()]), word, '')
+
     # sorted function can sort words alphabetically, so the key for each word is its alphabetical reflection according
     # to letters_order. e.g. "Lorem"'s key is "LZTXM"
-    arr = sorted(arr, key=lambda word: reduce(lambda w, l: w + chr(a_ord + letters_order[l.upper()]), word, ''))
+    arr = sorted(arr, key=_key)
 
-    return " ".join(arr)
+    return " ".join(arr), word_dict
 
 
 if __name__ == '__main__':

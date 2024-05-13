@@ -40,11 +40,11 @@ if __name__ == '__main__':
     #     # assert combine == expected
     start = time()
     s = Solution()
-    for n in range(1, 21):
-        # print(f"(1, {n})")
-        for k in range(1, n+1):
-            combine = s.combine(n, k)
-            # print(f"  {combine}")
-
+    # for n in range(1, 21):
+    #     # print(f"(1, {n})")
+    #     for k in range(1, n+1):
+    #         combine = s.combine(n, k)
+    #         print(f"  {combine}")
+    print(s.combine(6, 3))
     print(f"{int(time()-start)}s")
 

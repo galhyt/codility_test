@@ -47,6 +47,9 @@ def is_primary(n: int):
 
 
 def primary_construct(n: int):
+    """
+    finds first 2 dividers (p, n/p) and find their primary division which constructs the original number primary division
+    """
     p = 2
     for p in range(2, int(n / 2)+1):
         if n % p == 0:

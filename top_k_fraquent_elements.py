@@ -3,27 +3,29 @@ from typing import List
 
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        k_frequent = [[0, 0]] * k
-        nums = sorted(nums)
+        """
+        create array of n for each possible amount of element appearences
+        """
+        n = len(nums)
+        count_arr = [[] for _ in range(n+1)]
+        count_dict = {}
+        for x in nums:
+            count_dict.setdefault(x, 0)
+            count_dict[x] += 1
 
-        while len(nums) > 0:
-            x = nums[0]
-            n = 0
-            while x == nums[0]:
-                nums.pop(0)
-                n += 1
-                if len(nums) == 0:
-                    break
+        for x, m in count_dict.items():
+            count_arr[m].append(x)
 
-            for i in range(k):
-                k_n, k_c = k_frequent[i]
-                if k_c < n:
-                    for j in range(k-2, i-1, -1):
-                        k_frequent[j+1] = k_frequent[j]
-                    k_frequent[i] = [x, n]
-                    break
+        output = []
+        for a in list(filter(lambda a: a, count_arr))[-1::-1]:
+            output.extend(a)
+            if len(output) >= k:
+                break
 
-        return [n for n, c in k_frequent]
+        if len(output) > k:
+            output = output[:k]
+
+        return output
 
 
 if __name__ == '__main__':
@@ -33,8 +35,8 @@ if __name__ == '__main__':
     # nums = [1]
     # k = 1
     #
-    # nums = [3,2,3,1,2,4,5,5,6,7,7,8,2,3,1,1,1,10,11,5,6,2,4,7,8,5,6]
-    # k = 10
+    nums = [3,2,3,1,2,4,5,5,6,7,7,8,2,3,1,1,1,10,11,5,6,2,4,7,8,5,6]
+    k = 10
     print(sol.topKFrequent(nums, k))
 
 

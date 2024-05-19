@@ -2,33 +2,22 @@
 Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it
 can trap after raining.
 """
+from functools import reduce
 from typing import List
 
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        left, right = [0 for _ in range(len(height))], [0 for _ in range(len(height))]
+        for i in range(1, len(height)):
+            left[i] = max(left[i-1], height[i-1])
+        for j in range(len(height)-2, -1, -1):
+            right[j] = max(right[j+1], height[j+1])
 
-def get_trapped_rain(height: List[int]) -> int:
-    """
-    we'll calculate the water height in each index:
-        - find sections in height list with differences of height and the height in the section is the minimum
-    the rain trapped in each index = water height  - height
-    :param height:
-    :return:
-    """
-    try:
-        n = len(height)
-        first_non_zero = next(filter(lambda i, h: h > 0, enumerate(height)))
-        start = first_non_zero[0]
-        end = next(filter(lambda i: height[i] > 0, range(len(height)-1, start, -1)))
-    except StopIteration:
-        return 0
-
-    water_height = height.copy()
-    start_h = height[start]
-    for i in range(start+1, end):
-        water_height[i] = start_h
-        if start_h <= height[i]:
-            start_h = height[i]
+        s = reduce(lambda s, t: s + (min(t[:2])-t[2] if t[2] < min(t[:2]) else 0), zip(left, right, height), 0)
+        return s
 
 
-
-
-
+if __name__ == '__main__':
+    height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
+    sol = Solution()
+    print(sol.trap(height))

@@ -2,19 +2,20 @@ from typing import List, Optional
 
 
 class Solution:
-    def _product_except_self(self, nums: List[int], answer: List[Optional[int]], start: int, n: int):
-        answer[start] = nums[start+1] * answer[start+1]
-        for i in range(start+1, n):
-            answer[i] *= nums[start]
-        start -= 1
-        if start >= 0:
-            self._product_except_self(nums, answer, start, n)
 
     def productExceptSelf(self, nums: List[int]) -> List[int]:
         n = len(nums)
-        answer = [None] * (n-1) + [1]
-        self._product_except_self(nums, answer, n-2, n)
-        return answer
+        # calculate prefixes
+        output = [1]
+        for i in range(1,n):
+            output.append(output[i-1] * nums[i-1])
+
+        postfix = 1
+        for i in range(-2,-n-1,-1):
+            postfix *= nums[i+1]
+            output[i] *= postfix
+
+        return output
 
 
 if __name__ == '__main__':

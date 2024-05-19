@@ -1,11 +1,10 @@
-import functools
 import itertools
-from typing import List, Tuple, Optional, Dict, Callable, Union, Any
+from typing import List, Union
 
 from hint import Hint, AbsoluteHint, NeighbourHint, RelativeHint
 
 
-def count_assignments(hints: List[Hint]):
+def count_assignments(hints: List[Hint]) -> int:
     floors: List[List[Union[Hint.Color, Hint.Animal, None]]] = [[None, None] for _ in range(5)]
     cand_colors = list(Hint.Color)
     cand_animals = list(Hint.Animal)
@@ -46,6 +45,11 @@ def count_assignments(hints: List[Hint]):
     return valid_assignments
 
 
+def print_hints(hints: List[Hint]):
+    for hint in hints:
+        print(f"    {hint}")
+
+
 if __name__ == '__main__':
     hints = [AbsoluteHint((Hint.Floor.first, Hint.Animal.rabbit)),
              AbsoluteHint((Hint.Floor.second, Hint.Animal.chicken)),
@@ -54,5 +58,19 @@ if __name__ == '__main__':
              AbsoluteHint((Hint.Animal.grasshopper, Hint.Color.blue)),
              NeighbourHint((Hint.Color.red, Hint.Color.green))]
     c = count_assignments(hints)
-    print(c)
+    print(f"\033[32mHints 1\033[0m")
+    print_hints(hints)
+    print(f"\n\033[34mPossible assignments:\033[0m {c}")
     assert c == 2
+
+    hints = [AbsoluteHint((Hint.Floor.fifth, Hint.Animal.bird)),
+             AbsoluteHint((Hint.Floor.first, Hint.Color.green)),
+             AbsoluteHint((Hint.Animal.frog, Hint.Color.yellow)),
+             NeighbourHint((Hint.Animal.frog, Hint.Animal.grasshopper)),
+             NeighbourHint((Hint.Color.red, Hint.Color.orange)),
+             RelativeHint((Hint.Animal.chicken, Hint.Color.blue, 4))]
+    c = count_assignments(hints)
+    print(f"\n\033[32mHints 2\033[0m")
+    print_hints(hints)
+    print(f"\n\033[34mPossible assignments:\033[0m {c}")
+    assert c == 4

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Dict, Tuple, Union, List, Optional
+from typing import Tuple, Union, List, Optional
 
 
 @dataclass
@@ -51,6 +51,16 @@ class AbsoluteHint(Hint):
     def __init__(self, value: Tuple[Union[Hint.Floor, Hint.Animal], Union[Hint.Color, Hint.Animal]]):
         self.value = value
 
+    def __str__(self):
+        a, b = self.value
+        if isinstance(a, Hint.Floor):
+            if isinstance(b, Hint.Animal):
+                return f"The {b.name} lives on the {b.name} floor"
+            else:
+                return f"The {a.name} floor is {b.name}"
+        else:
+            return f"The {a.name} lives on the {b.name} floor"
+
     def is_assignment_valid(self, floors: List[List[Union[Hint.Color, Hint.Animal]]]) -> bool:
         a, b = self.value
         if isinstance(a, Hint.Floor):
@@ -67,6 +77,10 @@ class RelativeHint(Hint):
         # value - how many floors the first element in the tuple resides below the second one
         self.value = value
 
+    def __str__(self):
+        a, b, n = self.value
+        return f"{a.name} resides {n} floors below {b.name}"
+
     def is_assignment_valid(self, floors: List[List[Union[Hint.Color, Hint.Animal]]]) -> bool:
         a, b, n = self.value
         a_f = self.search_animal_floor(floors, a) if isinstance(a, Hint.Animal) else self.search_color_floor(floors, a)
@@ -74,9 +88,14 @@ class RelativeHint(Hint):
 
         return b_f - a_f == n
 
+
 class NeighbourHint(Hint):
     def __init__(self, value: Tuple[Union[Hint.Animal, Hint.Color], Union[Hint.Animal, Hint.Color]]):
         self.value = value
+
+    def __str__(self):
+        a, b = self.value
+        return f"{a.name} is neighbour of {b.name}"
 
     def is_assignment_valid(self, floors: List[List[Union[Hint.Color, Hint.Animal]]]) -> bool:
         a, b = self.value

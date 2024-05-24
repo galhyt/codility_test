@@ -1,29 +1,29 @@
+import itertools
 from typing import List
 
 
 def min_set(umbrellas: List[int], people: int):
-    umbrellas = sorted(umbrellas)
-    r = len(umbrellas) - 1
+    umbrellas = sorted(umbrellas, reverse=True)
+    for j in range(len(umbrellas)):
+        u = umbrellas[j]
+        n = people // u
+        comb = {u: n}
+        if people % u == 0:
+            return comb
 
-    _sum = 0
-    comb = []
-    while r > 0:
-        ur = umbrellas[r]
-        un = (people - _sum) // ur
-        if un > 0:
-            _sum += ur * un
-            comb.extend([ur] * un)
-            if _sum == people:
-                return comb
-            r -= 1
-        else:
-            ur = comb.pop(-1)
-            _sum -= ur
+        if j < len(umbrellas) - 1:
+            for i in range(n, 0, -1):
+                comb[u] = i
+                _comb = min_set(umbrellas[j+1:], people - u*i)
+                if _comb:
+                    comb.update(_comb)
+                    return comb
 
-    return comb
+    return []
 
 
 if __name__ == '__main__':
-    umbrellas = [1, 3, 6, 10, 13]
-    people = 27
+    umbrellas = [3, 6, 7, 8, 19, 21, 31]
+    people = 51
+    # 7: 3, 6: 4, 3: 8
     print(min_set(umbrellas, people))

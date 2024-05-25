@@ -1,3 +1,6 @@
+from functools import reduce
+
+
 class Solution:
     def minWindow(self, s: str, t: str) -> str:
         l, r = 0, 0
@@ -15,25 +18,24 @@ class Solution:
         for c in t:
             t_dict.setdefault(c, 0)
             t_dict[c] += 1
-        _t_dict = t_dict.copy()
 
         while r < len(s):
-            if s[r] in t:
-                if _t_dict.get(s[r], 0):
-                    _t_dict[s[r]] -= 1
-                if s[r] in _t_dict:
-                    _t_dict.pop(s[r])
+            if s[r] in t_dict:
+                if t_dict.get(s[r], 0):
+                    t_dict[s[r]] -= 1
+                else:
+                    if s[l] == s[r]:
+                        l += 1
+                        while l < len(s) and s[l] not in t:
+                            l += 1
 
-                if not _t_dict:
+                if not reduce(lambda s, c: s+t_dict[c], t_dict, 0):
+                    print(f"{l}, {r}    {s[l: r+1]}")
                     if r - l + 1 < min_sub_len:
                         min_sub = s[l: r+1]
                         min_sub_len = len(min_sub)
 
-                    _t_dict = t_dict.copy()
-                    if _t_dict.get(s[l], 0):
-                        _t_dict[s[l]] -= 1
-                    if s[r] in _t_dict:
-                        _t_dict.pop(s[l])
+                    if s[l] in t_dict: t_dict[s[l]] += 1
                     l += 1
                     while l < len(s) and s[l] not in t:
                         l += 1
@@ -45,7 +47,8 @@ class Solution:
 
 
 if __name__ == '__main__':
-    s = "OUZODYXAZV"
-    t = "XYZ"
+    s = "acbbaca"
+    t = "aba"
     sol = Solution()
+    print(f"{s}     {t}")
     print(sol.minWindow(s, t))

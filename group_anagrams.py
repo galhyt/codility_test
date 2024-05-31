@@ -23,6 +23,7 @@ class Solution:
 
 if __name__ == '__main__':
     strs = ["eat", "tea", "tan", "ate", "nat", "bat"]
-    strs = ["","b"]
+    # strs = ["","b"]
+    strs = ['abc', 'abcd', 'def', 'cba']
     sol = Solution()
     print(sol.groupAnagrams(strs))

@@ -59,8 +59,9 @@ class Lru:
                 node = KeyVal(key, val)
                 self.dict[key] = node
                 if self.used >= self.capacity:
+                    self.dict.pop(self.root.key)
                     self.root = self.root.next
-                    self.root.prev = None
+                    if self.root: self.root.prev = None
                 else:
                     self.used += 1
             else:
@@ -80,6 +81,10 @@ class Lru:
         node.next = None
         self.last = node
 
+        if not self.root:
+            self.root = node
+            return
+
         if self.root.key == node.key:
             self.root = orig_next
             orig_next.prev = None
@@ -97,4 +102,5 @@ if __name__ == '__main__':
     lru.put_key(3, "three")
     lru.put_key(4, "four")
     lru.put_key(5, "five")
+    print(f"1={lru.get(1)}")
 

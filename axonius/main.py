@@ -18,8 +18,7 @@ pages = {
 
 
 async def get_page(page):
-    if page == 1:
-        await asyncio.sleep(1)
+    await asyncio.sleep(1)
     return pages[page]
 
 
@@ -30,16 +29,12 @@ async def get_all_chars(page):
 
 
 async def main():
-    tasks = [await get_all_chars(1), await get_all_chars(2)]
-    # results = await asyncio.gather(*tasks)
-
-    for result in tasks:
+    tasks = [get_all_chars(page) for page in range(1, 5)]
+    future = await asyncio.gather(*tasks)
+    for result in future:
         for c in result:
             print(c)
-
-    task = await get_all_chars(3)
-    for c in task:
-        print(c)
+            time.sleep(0.5)
 
 
 if __name__ == '__main__':

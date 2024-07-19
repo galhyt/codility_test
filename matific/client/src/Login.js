@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import './Login.css';  // Import the CSS file
+import UserContext from './userContext'
 
 function Login({ setToken }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const { setUserType } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,6 +17,7 @@ function Login({ setToken }) {
         password,
       });
       setToken(response.data.access);
+      setUserType(response.data.user.usertype); // Save userType from response
     } catch (error) {
       setError('Login failed');
     }

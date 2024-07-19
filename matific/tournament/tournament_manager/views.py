@@ -31,6 +31,7 @@ class CustomLoginView(APIView):
                 'user': {
                     'username': user.username,
                     'email': user.email,
+                    'usertype': user.user_type
                 }
             })
         else:
@@ -91,7 +92,8 @@ class TeamView(APIView):
         team = Team.objects.get(id=team_id)
         return JsonResponse({
                     'avg_score': team.avg_score,
-                    'players': [{'name': player.user.get_full_name(),
+                    'players': [{'id': player.user.id,
+                                 'name': player.user.get_full_name(),
                                  'height': player.height,
                                  'age': player.age,
                                  'avg_score': player.avg_score,

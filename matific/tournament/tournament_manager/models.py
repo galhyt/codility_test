@@ -26,13 +26,14 @@ class Player(models.Model):
 
     @property
     def avg_score(self):
-        stats = GameStats.objects.filter(player=self.user.id)
+        stats = GameStats.objects.filter(player__user__id=self.user.id)
+        if len(stats) == 0: return 0
         scores = sum(map(lambda stat: stat.score, stats))
         return scores / len(stats)
 
     @property
     def games_no(self):
-        stats = GameStats.objects.filter(player=self.user.id)
+        stats = GameStats.objects.filter(player__user__id=self.user.id)
         return len(stats)
 
 # Team model

@@ -1,0 +1,22 @@
+.team-players-container {
+  padding: 20px;
+}
+
+.players-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.players-table th, .players-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.players-table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+.players-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}

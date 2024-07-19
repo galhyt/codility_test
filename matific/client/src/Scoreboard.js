@@ -19,11 +19,15 @@ const GamesTable = ({ games }) => (
         <tr key={index}>
           <td>{new Date(game.date).toLocaleDateString()}</td>
           <td style={{ fontWeight: game.home_team_score >  game.away_team_score ? 'bold' : 'normal' }}>
-            <Link to={`/team_players/${game.home_team_id}`}>
+            <Link to={`/team_players/${game.home_team_id}/${game.home_team}`}>
                 {game.home_team}
             </Link>
           </td>
-          <td style={{ fontWeight: game.away_team_score >  game.home_team_score ? 'bold' : 'normal' }}>{game.away_team}</td>
+          <td style={{ fontWeight: game.away_team_score >  game.home_team_score ? 'bold' : 'normal' }}>
+            <Link to={`/team_players/${game.away_team_id}/${game.away_team}`}>
+                {game.away_team}
+            </Link>
+          </td>
           <td>{game.home_team_score}</td>
           <td>{game.away_team_score}</td>
         </tr>

@@ -1,4 +1,6 @@
 # myapp/views.py
+import itertools
+
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
@@ -39,15 +41,17 @@ class GamesView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        games = [{'date': game.date,
+        rounds = [{'round': round,
+                  'games': [{'date': game.date,
                   'round': game.round,
                   'home_team_id': game.home_team.id,
                   'away_team_id': game.away_team.id,
-                  'home_team': str(game.home_team),
-                  'away_team': str(game.away_team),
+                  'home_team': game.home_team.name,
+                  'away_team': game.away_team.name,
                   'home_team_score': game.home_team_score,
-                  'away_team_score': game.away_team_score} for game in Game.objects.all()]
-        return JsonResponse({'games': games})
+                  'away_team_score': game.away_team_score} for game in round_games]
+                  } for round, round_games in itertools.groupby(Game.objects.all(), key=lambda g: g.round)]
+        return JsonResponse({'rounds': rounds})
 
 class TeamPlayersView(APIView):
     permission_classes = [CanViewTeamPlayers]

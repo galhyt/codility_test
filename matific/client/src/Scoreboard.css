@@ -1,0 +1,43 @@
+/* Container for the scoreboard */
+.scoreboard-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+/* Table styling */
+.games-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.games-table th,
+.games-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.games-table th {
+  background-color: #f4f4f4;
+}
+
+.games-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Round heading */
+.round-heading {
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Loading message */
+.loading {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+}

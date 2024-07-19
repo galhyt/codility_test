@@ -59,7 +59,7 @@ class TeamPlayersView(APIView):
     def post(self, request):
         try:
             # need to check that the user is coach of the team or admin
-            team_id = request.POST.get('team')
+            team_id = request.data.get('team')
             team = Team.objects.get(id=team_id)
         except Exception as e:
             print(e)
@@ -74,7 +74,7 @@ class PlayerView(APIView):
 
     def post(self, request):
         # need to check that the user is coach of the team or admin
-        player_id = request.POST.get('player')
+        player_id = request.data.get('player')
         player = Player.objects.get(user__id=player_id)
         return JsonResponse({'name': player.user.get_full_name(),
                              'height': player.height,
@@ -87,7 +87,7 @@ class TeamView(APIView):
     permission_classes = [IsLeagueAdmin]
 
     def post(self, request):
-        team_id = request.POST.get('team')
+        team_id = request.data.get('team')
         team = Team.objects.get(id=team_id)
         return JsonResponse({
                     'avg_score': team.avg_score,

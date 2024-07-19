@@ -23,8 +23,9 @@ class CanViewTeamPlayers(IsLeagueAdmin):
         if super().has_permission(request, view):
             return True
         try:
-            team = Team.objects.get(id=request.POST.get('team'))
+            team = Team.objects.get(id=request.data.get('team'))
         except Team.DoesNotExist as e:
+            print(f"{e} team={request.data.get('team')}")
             return False
 
         if not team.coach: return False
@@ -41,7 +42,7 @@ class CanViewPlayer(IsLeagueAdmin):
         if super().has_permission(request, view):
             return True
         try:
-            player = Player.objects.get(user__id=request.POST.get('player'))
+            player = Player.objects.get(user__id=request.data.get('player'))
         except Player.DoesNotExist as e:
             return False
 

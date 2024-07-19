@@ -1,5 +1,6 @@
 // src/App.js
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Login';
 import Scoreboard from './Scoreboard';
 
@@ -7,13 +8,11 @@ function App() {
   const [token, setToken] = useState(null);
 
   return (
-    <div className="App">
-      {!token ? (
-        <Login setToken={setToken} />
-      ) : (
-        <Scoreboard token={token} />
-      )}
-    </div>
+  <Router>
+      <Routes>
+          <Route path="/" element={!token ? <Login setToken={setToken} /> : <Scoreboard token={token} />} />
+      </Routes>
+    </Router>
   );
 }
 

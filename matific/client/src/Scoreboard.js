@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import './Scoreboard.css';  // Import the CSS file
 
 const GamesTable = ({ games }) => (
@@ -17,7 +18,11 @@ const GamesTable = ({ games }) => (
       {games.map((game, index) => (
         <tr key={index}>
           <td>{new Date(game.date).toLocaleDateString()}</td>
-          <td style={{ fontWeight: game.home_team_score >  game.away_team_score ? 'bold' : 'normal' }}>{game.home_team}</td>
+          <td style={{ fontWeight: game.home_team_score >  game.away_team_score ? 'bold' : 'normal' }}>
+            <Link to={`/team_players/${game.home_team_id}`}>
+                {game.home_team}
+            </Link>
+          </td>
           <td style={{ fontWeight: game.away_team_score >  game.home_team_score ? 'bold' : 'normal' }}>{game.away_team}</td>
           <td>{game.home_team_score}</td>
           <td>{game.away_team_score}</td>

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Login';
+import Logout from './Logout';
 import Scoreboard from './Scoreboard';
 import TeamPlayers from './TeamPlayers';
 import Player from './Player';
@@ -23,6 +24,7 @@ function App() {
                   <Route path="/player/:playerId/:playerName" element={<Player token={token} />} />
                   <Route path="/team/:teamId/:teamName" element={<Team token={token} />} />
                   <Route path="/user_statistics/" element={<UserStatistics token={token} />} />
+                  <Route path="/logout/" element={<Logout token={token} setToken={setToken} />} />
               </Routes>
           </Layout>
        </Router>

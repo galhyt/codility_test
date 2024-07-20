@@ -11,6 +11,7 @@ const Layout = ({ children }) => {
           <ul>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/user_statistics/">User Statistics</Link></li>
+            <li><Link to="/logout/">Logout</Link></li>
             {/* Add more links as needed */}
           </ul>
         </nav>
@@ -19,7 +20,7 @@ const Layout = ({ children }) => {
         {children}
       </main>
       <footer>
-        <p>© 2024 Your Company</p>
+        <p>© 2024 matific</p>
       </footer>
     </div>
   );

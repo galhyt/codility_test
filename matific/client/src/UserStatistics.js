@@ -3,6 +3,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './UserStatistics.css';
 
+function secondsToHms(d) {
+  d = Number(d);
+  const h = Math.floor(d / 3600).toString().padStart(2, '0');
+  const m = Math.floor((d % 3600) / 60).toString().padStart(2, '0');
+  const s = Math.floor((d % 3600) % 60).toString().padStart(2, '0');
+
+  return `${h}:${m}:${s}`;
+}
+
 const UserStatistics = ({ token }) => {
   const [users, setUsers] = useState([]);
 
@@ -39,9 +48,9 @@ const UserStatistics = ({ token }) => {
               <td>{user.username}</td>
               <td>{user.user_type}</td>
               <td>{user.login_count}</td>
-              <td>{user.total_time_spent}</td>
+              <td>{secondsToHms(user.total_time_spent)}</td>
               <td>{user.is_online ? 'Yes' : 'No'}</td>
-              <td>{user.current_session_duration}</td>
+              <td>{secondsToHms(user.current_session_duration)}</td>
             </tr>
           ))}
         </tbody>

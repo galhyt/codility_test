@@ -44,6 +44,7 @@ class CustomLoginView(APIView):
 
 class LogoutView(APIView):
     def post(self, request):
+        print(f"\n\n\n**********************************\nrequest.user.id = {request.user.id}\n\n\n**********************************")
         logout(request)
         return Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
 

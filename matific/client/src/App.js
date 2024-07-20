@@ -6,6 +6,8 @@ import Scoreboard from './Scoreboard';
 import TeamPlayers from './TeamPlayers';
 import Player from './Player';
 import Team from './Team';
+import UserStatistics from './UserStatistics';
+import Layout from './Layout';
 import { UserProvider } from './userContext';
 
 function App() {
@@ -14,12 +16,15 @@ function App() {
   return (
   <UserProvider>
       <Router>
-          <Routes>
-              <Route path="/" element={!token ? <Login setToken={setToken} /> : <Scoreboard token={token} />} />
-              <Route path="/team_players/:teamId/:teamName" element={!token ? <Login setToken={setToken} /> : <TeamPlayers token={token} />} />
-              <Route path="/player/:playerId/:playerName" element={<Player token={token} />} />
-              <Route path="/team/:teamId/:teamName" element={<Team token={token} />} />
-          </Routes>
+          <Layout>
+              <Routes>
+                  <Route path="/" element={!token ? <Login setToken={setToken} /> : <Scoreboard token={token} />} />
+                  <Route path="/team_players/:teamId/:teamName" element={!token ? <Login setToken={setToken} /> : <TeamPlayers token={token} />} />
+                  <Route path="/player/:playerId/:playerName" element={<Player token={token} />} />
+                  <Route path="/team/:teamId/:teamName" element={<Team token={token} />} />
+                  <Route path="/user_statistics/" element={<UserStatistics token={token} />} />
+              </Routes>
+          </Layout>
        </Router>
    </UserProvider>
   );

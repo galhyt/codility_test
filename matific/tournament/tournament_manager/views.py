@@ -2,14 +2,16 @@
 import itertools
 
 from django.http import JsonResponse
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
+from django.utils import timezone
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Game, Team, Player
+from .models import User, Game, Team, Player
+from .serializers import UserStatisticsSerializer
 from .permissions import CanViewTeamPlayers, CanViewPlayer, IsLeagueAdmin
 
 
@@ -24,6 +26,8 @@ class CustomLoginView(APIView):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
+            login(request, user)  # This will automatically trigger the user_logged_in signal
+
             refresh = RefreshToken.for_user(user)
             return Response({
                 'refresh': str(refresh),
@@ -36,6 +40,12 @@ class CustomLoginView(APIView):
             })
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class LogoutView(APIView):
+    def post(self, request):
+        logout(request)
+        return Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
 
 
 class GamesView(APIView):
@@ -98,3 +108,21 @@ class TeamView(APIView):
                                  'age': player.age,
                                  'avg_score': player.avg_score,
                                  'games_no': player.games_no} for player in team.players]})
+
+
+class UserStatisticsView(APIView):
+    permission_classes = [IsLeagueAdmin]
+
+    def get(self, request, format=None):
+        # Only allow access to league_admin users
+        if not request.user.is_authenticated or request.user.user_type != 'league_admin':
+            return Response(status=403)
+
+        users = User.objects.all()
+        for user in users:
+            if user.is_online():
+                user.current_session_duration = timezone.now() - user.last_login_time
+            else:
+                user.current_session_duration = None
+        serializer = UserStatisticsSerializer(users, many=True)
+        return Response(serializer.data)

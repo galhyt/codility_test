@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
+
 
 # Custom user model
 class User(AbstractUser):
@@ -10,6 +12,20 @@ class User(AbstractUser):
     )
     user_type = models.CharField(max_length=30, choices=USER_TYPE_CHOICES)
     team = models.ForeignKey('Team', null=True, blank=True, on_delete=models.SET_NULL, related_name='members')
+
+    login_count = models.PositiveIntegerField(default=0)
+    total_time = models.DurationField(default=timezone.timedelta)
+    last_login_time = models.DateTimeField(null=True, blank=True)
+    last_logout_time = models.DateTimeField(null=True, blank=True)
+
+    def is_online(self):
+        if not self.last_login_time:
+            return False
+        elif not self.last_logout_time:
+            return True
+        else:
+            return self.last_login_time > self.last_logout_time
+
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)

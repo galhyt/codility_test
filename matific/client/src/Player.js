@@ -55,7 +55,7 @@ const Player = ({ token }) => {
             </tr>
             <tr>
               <th>Average Score</th>
-              <td>{player.avg_score}</td>
+              <td>{player.avg_score.toFixed(2)}</td>
             </tr>
             <tr>
               <th>Number of Games</th>

@@ -21,9 +21,9 @@ function App() {
               <Routes>
                   <Route path="/" element={!token ? <Login setToken={setToken} /> : <Scoreboard token={token} />} />
                   <Route path="/team_players/:teamId/:teamName" element={!token ? <Login setToken={setToken} /> : <TeamPlayers token={token} />} />
-                  <Route path="/player/:playerId/:playerName" element={<Player token={token} />} />
-                  <Route path="/team/:teamId/:teamName" element={<Team token={token} />} />
-                  <Route path="/user_statistics/" element={<UserStatistics token={token} />} />
+                  <Route path="/player/:playerId/:playerName" element={!token ? <Login setToken={setToken} /> : <Player token={token} />} />
+                  <Route path="/team/:teamId/:teamName" element={!token ? <Login setToken={setToken} /> : <Team token={token} />} />
+                  <Route path="/user_statistics/" element={!token ? <Login setToken={setToken} /> : <UserStatistics token={token} />} />
                   <Route path="/logout/" element={<Logout token={token} setToken={setToken} />} />
               </Routes>
           </Layout>

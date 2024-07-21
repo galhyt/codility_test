@@ -1,0 +1,43 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./tournament
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./tournament:/app
+    ports:
+      - "8000:8000"
+#    env_file:
+#      - .env
+    depends_on:
+      - db
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/admin/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./client
+    volumes:
+      - ./client:/app
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: tournament
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: universite
+
+volumes:
+  postgres_data:

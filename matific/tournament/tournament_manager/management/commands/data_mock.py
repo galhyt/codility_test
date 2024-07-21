@@ -36,8 +36,10 @@ class Command(BaseCommand):
     def create_users(self):
         # create league_admin user
         name = f"league_admin"
-        User.objects.create(username=name, first_name=name, last_name=name, email=f"{name}@gmail.com",
-                            user_type='league_admin')
+        user = User.objects.create(username=name, first_name=name, last_name=name, email=f"{name}@gmail.com",
+                                   user_type='league_admin')
+        user.set_password('universite')
+        user.save()
 
         for team in Team.objects.all():
             # create players
@@ -50,7 +52,9 @@ class Command(BaseCommand):
 
             # create coach
             name = f"{team.name}_coach"
-            User.objects.create(username=name, first_name=name, last_name=name, email=f"{name}@gmail.com", user_type='coach', team=team)
+            user = User.objects.create(username=name, first_name=name, last_name=name, email=f"{name}@gmail.com", user_type='coach', team=team)
+            user.set_password('universite')
+            user.save()
 
     def create_games(self):
         game_date = datetime.datetime.now()

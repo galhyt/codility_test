@@ -1,5 +1,5 @@
 from abc import ABC, ABCMeta
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import partial
 from typing import List, Callable
 
@@ -8,7 +8,7 @@ from typing import List, Callable
 class ZDState:
     name: str
     initial: bool = False
-    transitions = []
+    transitions: List = field(default_factory=list)
 
     def to(self, target):
         return Transition(self, target)
@@ -26,6 +26,7 @@ class Transition:
         succeeded = self.execute_callback(*args, **kwargs) if self.execute_callback else True
         if succeeded:
             self.execute_callback_succeeded()
+        return succeeded
 
     def __str__(self):
         return f"Transition {self.name}: {self.src.name} -> {self.trg.name}"
@@ -97,8 +98,7 @@ class Action(ZDStateMachine):
     def move_next(self):
         for tran in self.cur_state.transitions:
             if tran():
-                return True
-        return False
+                self.move_next()
 
 
 class AddAction(Action):
@@ -113,6 +113,21 @@ class AddAction(Action):
 
     def on_start(self):
         print("on_start")
+        return False
+
+
+class RemoveAction(Action):
+    pending = ZDState("pending", initial=True)
+    machine_remove = ZDState("machine_remove")
+    cloud_remove = ZDState("cloud_remove")
+    final = ZDState("final")
+
+    start = pending.to(machine_remove)
+    start_cloud = machine_remove.to(cloud_remove)
+    finish = cloud_remove.to(final)
+
+    def on_start_cloud(self):
+        print("on_start_cloud")
         return False
 
 

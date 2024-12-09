@@ -57,40 +57,38 @@ class ZDStateMachineMetaClass(ABCMeta):
 
         return cls
 
-    def __call__(cls, *args, **kwargs):
-        self = super().__call__(*args, **kwargs)
-
-        for transition in self.transitions:
-            fn_name = f"on_{transition.name}"
-            fn = getattr(cls, fn_name, None)
-            transition.execute_callback = partial(cls._on_transition_, fn, self, transition)
-            transition.execute_callback_succeeded = partial(cls._after_transition_, self, transition.trg)
-
-        init_state = [state for state in self.states if state.initial]
-        if init_state:
-            self.cur_state = init_state[0]
-
-        return self
-
-    @staticmethod
-    def _after_transition_(state_machine, trg_state):
-        state_machine.cur_state = trg_state
-
-    @staticmethod
-    def _on_transition_(fn, state_machine, transition):
-        print(f"{transition}")
-        if state_machine.cur_state != transition.src:
-            raise TypeError(f"Transition {transition.name} can't be executed from state {state_machine.cur_state.name}")
-        return fn(state_machine) if fn else True
-
 
 class ZDStateMachine(ABC, metaclass=ZDStateMachineMetaClass):
 
     states: List[ZDState] = []
     transitions: List[Transition] = []
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._set_transitions_callbacks_()
         self.cur_state = None
+        self._set_cur_state_()
+
+    def _set_transitions_callbacks_(self):
+        for transition in self.transitions:
+            fn_name = f"on_{transition.name}"
+            fn = getattr(self, fn_name, None)
+            transition.execute_callback = partial(self._on_transition_, fn, transition)
+            transition.execute_callback_succeeded = partial(self._after_transition_, transition.trg)
+
+    def _set_cur_state_(self):
+        init_state = [state for state in self.states if state.initial]
+        if init_state:
+            self.cur_state = init_state[0]
+
+    def _on_transition_(self, fn, transition):
+        print(f"{transition}")
+        if self.cur_state != transition.src:
+            raise TypeError(f"Transition {transition.name} can't be executed from state {self.cur_state.name}")
+        return fn() if fn else True
+
+    def _after_transition_(self, trg_state):
+        self.cur_state = trg_state
 
 
 class Action(ZDStateMachine):

@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from action import AddAction
+from actions import AddAction, RemoveAction
 
 
 class TestAddAction(TestCase):
@@ -16,7 +16,7 @@ class TestAddAction(TestCase):
             add.start_machine()
         self.assertEqual(add.cur_state, add.pending)
 
-        with patch("action.AddAction.on_start", returned_value=True):
+        with patch("actions.AddAction.on_start", returned_value=True):
             add = AddAction()
             add.start()
             self.assertEqual(add.cur_state, add.cloud_running)
@@ -26,7 +26,11 @@ class TestAddAction(TestCase):
         self.assertEqual(add.cur_state, add.pending)
         add.move_next()
         self.assertEqual(add.cur_state, add.pending)
-        with patch("action.AddAction.on_start", returned_value=True):
+        with patch("actions.AddAction.on_start", returned_value=True):
             add = AddAction()
             add.move_next()
             self.assertEqual(add.cur_state, add.final)
+
+    def test_action_type(self):
+        remove = RemoveAction()
+        self.assertEqual(remove.type, "remove_action")

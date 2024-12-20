@@ -12,6 +12,10 @@ class AddAction(Action):
     start_machine = cloud_running.to(machine_running)
     finish = machine_running.to(final)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.start_signal = False
+
     def on_start(self):
         print("on_start")
-        return False
+        return self.start_signal

@@ -11,7 +11,8 @@ class TestActionAbstraction(TestCase):
         self.assertEqual(add.cur_state, add.pending)
         add.move_next()
         self.assertEqual(add.cur_state, add.pending)
-        with patch("actions.AddAction.on_start", returned_value=True):
-            add = Action("add_action")
-            add.move_next()
-            self.assertEqual(add.cur_state, add.final)
+
+        add = Action("add_action")
+        add.start_signal = True
+        add.move_next()
+        self.assertEqual(add.cur_state, add.final)

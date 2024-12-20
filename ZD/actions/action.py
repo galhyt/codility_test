@@ -34,5 +34,5 @@ class Action(ZDStateMachine, metaclass=ActionMetaClass):
 
     def move_next(self):
         for tran in self.cur_state.transitions:
-            if tran():
+            if tran.__get__(self, self.__class__)():
                 self.move_next()

@@ -34,3 +34,10 @@ class TestAddAction(TestCase):
     def test_action_type(self):
         remove = RemoveAction()
         self.assertEqual(remove.type, "remove_action")
+
+    def test_actions_not_overlapp(self):
+        # with patch("actions.AddAction", MockAddAction):
+        add1, add2 = AddAction(), AddAction()
+        add1.start()
+        self.assertEqual(add1.cur_state, add1.cloud_running)
+        self.assertEqual(add2.cur_state, add2.pending)
